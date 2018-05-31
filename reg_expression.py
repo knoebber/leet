@@ -4,7 +4,10 @@ class NonFiniteAutomata(object) :
   """
   def __init__(self,pattern) :
     self.pattern = pattern
-    self.start_state = State(pattern[0],True,len(pattern) == 1)
+    if len(pattern) > 0 :
+      self.start_state = State(pattern[0],True,len(pattern) == 1)
+    else :
+      self.start_state = None
     if len(pattern) > 1 :
       curr = self.start_state
       for c in pattern[1:] :
@@ -25,10 +28,14 @@ class NonFiniteAutomata(object) :
   return (bool) => whether the string matches
   """
   def match(self,s) :
+    if self.start_state and self.start_state.star and self.start_state.is_end and not s :
+      return True
+    if not self.pattern :
+      return not s
     return self._match_r(s,0,self.start_state)
 
   def _match_r(self,s,i,state) :
-    debug = False
+    debug = True
     if debug : print i
     if debug : print s
     if i > len(s) - 1 :
@@ -36,10 +43,14 @@ class NonFiniteAutomata(object) :
       return False
     c = s[i]
     if state.star :
+      if state.is_end and i == len(s) - 1 and c == state.c:
+        return True
       l = False
       if state.c == s[i] or state.c == '.' :
         l = self._match_r(s,i+1,state) #use same state again
-      n  = self._match_r(s,i,state.next_state)
+      n = False
+      if state.next_state :
+        n  = self._match_r(s,i,state.next_state)
       return l or n
       #return  or self._match_r(s,i+1,state.next_state)
     else :
@@ -93,6 +104,12 @@ class State(object) :
     self.star = False
 
 
+def test_empty() :
+  nfa = NonFiniteAutomata('')
+  assert nfa.match('a') == False
+  assert nfa.match('')  == True
+  print 'pass empty'
+
 
 
 def test_singleton() :
@@ -135,21 +152,39 @@ def test_star() :
   assert nfa.match('ac')   == True
   assert nfa.match('c')    == True
   assert nfa.match('aaac') == True
+  nfa = NonFiniteAutomata('a*')
+  assert nfa.match('b') == False
+  assert nfa.match('ab') == False
+  assert nfa.match('aab') == False
+  assert nfa.match('') == True
+  assert nfa.match('a') == True
+  assert nfa.match('aaa') == True
   print 'pass star'
 
+def test_dot_star() :
+  nfa = NonFiniteAutomata('.*c')
+  assert nfa.match('')       == False
+  assert nfa.match('a')      == False
+  assert nfa.match('ab')     == False
+  assert nfa.match('acd')    == False
+  assert nfa.match('aacd')   == False
+  assert nfa.match('acaacx') == False
+  assert nfa.match('cc')     == True
+  assert nfa.match('acc')    == True
+  assert nfa.match('ac')     == True
+  assert nfa.match('c')      == True
+  assert nfa.match('abcaac') == True
+  print 'pass dot star'
+
+
 def test_suite() :
+  test_empty()
   test_singleton()
   test_simple_pattern()
   test_dot()
   test_star()
+  test_dot_star()
 
 
 
 test_suite()
-nfa = NonFiniteAutomata('a*c')
-"""
-print nfa.match('c')
-print nfa.match('ac')
-print nfa.match('aac')
-print nfa.match('aacc')
-"""
