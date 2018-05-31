@@ -1,3 +1,4 @@
+
 class NonFiniteAutomata(object) :
   """
   creates a NFA that recognizes a pattern string
@@ -28,8 +29,11 @@ class NonFiniteAutomata(object) :
   return (bool) => whether the string matches
   """
   def match(self,s) :
+    print 'start'
+    print s
+    print self.pattern
     if self.start_state and self.start_state.star and self.start_state.is_end and not s :
-      return True
+      return self.start_state.c != '.'
     if not self.pattern :
       return not s
     return self._match_r(s,0,self.start_state)
@@ -37,13 +41,18 @@ class NonFiniteAutomata(object) :
   def _match_r(self,s,i,state) :
     debug = True
     if debug : print i
-    if debug : print s
+    if state.c != '.' and state.next_state and state.next_state.star and state.next_state.is_end:
+      if debug : print 'next state is star and end'
+      return True
     if i > len(s) - 1 :
       if debug : print 'i > len'
       return False
     c = s[i]
+    if debug :
+      print 'curr char: '+c
+      print 'curr state: '+state.c
     if state.star :
-      if state.is_end and i == len(s) - 1 and c == state.c:
+      if state.is_end and i == len(s) - 1 and (c == state.c or state.c == '.') :
         return True
       l = False
       if state.c == s[i] or state.c == '.' :
@@ -58,13 +67,12 @@ class NonFiniteAutomata(object) :
         if debug: print 'not equal'
         return False
 
-    if debug : print state.next_state
     if not state.next_state :
       if debug :
         print 'not next state'
-        print state.is_end
-        print i
-        print len(s) - 1
+        print 'next is end: '+str(state.is_end)
+        print 'i: '+str(i)
+        print 'last index: '+str(len(s) - 1)
       return state.is_end and i == len(s) - 1
     else :
       return self._match_r(s,i+1,state.next_state)
@@ -103,88 +111,3 @@ class State(object) :
     self.prev_state = None
     self.star = False
 
-
-def test_empty() :
-  nfa = NonFiniteAutomata('')
-  assert nfa.match('a') == False
-  assert nfa.match('')  == True
-  print 'pass empty'
-
-
-
-def test_singleton() :
-  nfa = NonFiniteAutomata('a')
-  assert nfa.match('')  == False
-  assert nfa.match('a') == True
-  assert nfa.match('b') == False
-  print 'pass singleton'
-
-def test_simple_pattern() :
-  nfa = NonFiniteAutomata('abcdef')
-  assert nfa.match('')        == False
-  assert nfa.match('a')       == False
-  assert nfa.match('abc')     == False
-  assert nfa.match('abcdeg')  == False
-  assert nfa.match('abcdefg') == False
-  assert nfa.match('abcdef')  == True
-  print 'pass simple pattern'
-
-def test_dot() :
-  nfa = NonFiniteAutomata('a.c')
-  assert nfa.match('')     == False
-  assert nfa.match('a')    == False
-  assert nfa.match('ab')   == False
-  assert nfa.match('ac')   == False
-  assert nfa.match('abc')  == True
-  assert nfa.match('aic')  == True
-  assert nfa.match('aicd') == False
-  print 'pass dot'
-
-def test_star() :
-  nfa = NonFiniteAutomata('a*c')
-  assert nfa.match('')     == False
-  assert nfa.match('a')    == False
-  assert nfa.match('ab')   == False
-  assert nfa.match('acd')  == False
-  assert nfa.match('aacd') == False
-  assert nfa.match('cc')   == False
-  assert nfa.match('acc')  == False
-  assert nfa.match('ac')   == True
-  assert nfa.match('c')    == True
-  assert nfa.match('aaac') == True
-  nfa = NonFiniteAutomata('a*')
-  assert nfa.match('b') == False
-  assert nfa.match('ab') == False
-  assert nfa.match('aab') == False
-  assert nfa.match('') == True
-  assert nfa.match('a') == True
-  assert nfa.match('aaa') == True
-  print 'pass star'
-
-def test_dot_star() :
-  nfa = NonFiniteAutomata('.*c')
-  assert nfa.match('')       == False
-  assert nfa.match('a')      == False
-  assert nfa.match('ab')     == False
-  assert nfa.match('acd')    == False
-  assert nfa.match('aacd')   == False
-  assert nfa.match('acaacx') == False
-  assert nfa.match('cc')     == True
-  assert nfa.match('acc')    == True
-  assert nfa.match('ac')     == True
-  assert nfa.match('c')      == True
-  assert nfa.match('abcaac') == True
-  print 'pass dot star'
-
-
-def test_suite() :
-  test_empty()
-  test_singleton()
-  test_simple_pattern()
-  test_dot()
-  test_star()
-  test_dot_star()
-
-
-
-test_suite()
