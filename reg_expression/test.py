@@ -49,11 +49,11 @@ def test_star() :
   assert nfa.match('c')    == True
   assert nfa.match('aaac') == True
   nfa = NonFiniteAutomata('a*')
-  assert nfa.match('b') == False
-  assert nfa.match('ab') == False
+  assert nfa.match('b')   == False
+  assert nfa.match('ab')  == False
   assert nfa.match('aab') == False
-  assert nfa.match('') == True
-  assert nfa.match('a') == True
+  assert nfa.match('')    == True
+  assert nfa.match('a')   == True
   assert nfa.match('aaa') == True
   print 'pass star'
 
@@ -70,6 +70,22 @@ def test_dot_star() :
   assert nfa.match('ac')     == True
   assert nfa.match('c')      == True
   assert nfa.match('abcaac') == True
+  nfa = NonFiniteAutomata('.*.l.*z')
+  assert nfa.match('aalz')         == True
+  assert nfa.match('xyzvalvdz')    == True
+  assert nfa.match('xyzvalvdzp')   == False
+  assert nfa.match('xyzvavdzpz')   == False
+  assert nfa.match('lxyzvavdzpz')  == False
+  assert nfa.match('alxyzvavdzpz') == True
+  nfa = NonFiniteAutomata('...*.*.*b')
+  nfa.match('')    ==  False
+  nfa.match('aba')   == False
+  nfa = NonFiniteAutomata('.*y.*',True)
+  assert nfa.match('y') == True
+  assert nfa.match('ay') == True
+  assert nfa.match('ayz') == True
+  assert nfa.match('xyyayzxxzy') == True
+
   print 'pass dot star'
 
 
