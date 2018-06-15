@@ -1,4 +1,5 @@
-from reg_expression import NonFiniteAutomata
+#from reg_expression import NonFiniteAutomata
+from simple_reg import NonFiniteAutomata
 
 def test_empty() :
   nfa = NonFiniteAutomata('')
@@ -58,7 +59,7 @@ def test_star() :
   print 'pass star'
 
 def test_dot_star() :
-  nfa = NonFiniteAutomata('.*c')
+  nfa = NonFiniteAutomata('.*c',True)
   assert nfa.match('')       == False
   assert nfa.match('a')      == False
   assert nfa.match('ab')     == False
@@ -96,6 +97,7 @@ def test_suite() :
   test_dot()
   test_star()
   test_dot_star()
+  print 'all test pass!'
 
 
 

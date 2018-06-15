@@ -2,8 +2,11 @@ class NonFiniteAutomata(object) :
   """
   creates a NFA that recognizes a pattern string
   """
-  def __init__(self,pattern) :
+  def __init__(self,pattern,debug=False) :
+    if debug :
+      print 'constructing ',pattern
     self.pattern = pattern
+    self.debug = debug
     if len(pattern) > 0 :
       self.start_state = State(pattern[0],True,len(pattern) == 1)
     else :
@@ -19,6 +22,8 @@ class NonFiniteAutomata(object) :
         curr.next_state = state
         curr = state
       curr.is_end = True
+      if debug :
+        self.print_states()
       #curr.next_state = State(pattern[-1],False,True)
       #curr.next_state.prev_state = curr
 
@@ -35,11 +40,10 @@ class NonFiniteAutomata(object) :
     return self._match_r(s,0,self.start_state)
 
   def _match_r(self,s,i,state) :
-    debug = True
-    if debug : print i
-    if debug : print s
+    if self.debug : print i
+    if self.debug : print s
     if i > len(s) - 1 :
-      if debug : print 'i > len'
+      if self.debug : print 'i > len'
       return False
     c = s[i]
     if state.star :
@@ -55,12 +59,12 @@ class NonFiniteAutomata(object) :
       #return  or self._match_r(s,i+1,state.next_state)
     else :
       if state.c != s[i] and state.c != '.' :
-        if debug: print 'not equal'
+        if self.debug: print 'not equal'
         return False
 
-    if debug : print state.next_state
+    if self.debug : print state.next_state
     if not state.next_state :
-      if debug :
+      if self.debug :
         print 'not next state'
         print state.is_end
         print i
