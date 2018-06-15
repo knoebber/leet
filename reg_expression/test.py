@@ -78,8 +78,12 @@ def test_dot_star() :
   assert nfa.match('lxyzvavdzpz')  == False
   assert nfa.match('alxyzvavdzpz') == True
   nfa = NonFiniteAutomata('...*.*.*b')
-  nfa.match('')    ==  False
-  nfa.match('aba')   == False
+  nfa.match('')     ==  False
+  nfa.match('aba')  == False
+  nfa.match('xyb')  == True
+  nfa.match('xybx') == False
+  nfa.match('zb')   == False
+  nfa.match('abcdefghjxyb')  == True
   nfa = NonFiniteAutomata('.*y.*')
   assert nfa.match('y') == True
   assert nfa.match('ay') == True
