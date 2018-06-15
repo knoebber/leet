@@ -2,23 +2,29 @@ class NonFiniteAutomata(object) :
   def __init__(self,pattern,debug=False) :
     if debug:
       print 'pattern: ',pattern
+    self.pattern = pattern
     self.nodes = []
     self.debug = debug
     n = 0
+    self.simple = True
     for i in range(0,len(pattern)) :
       c = pattern[i]
+      if self.simple :
+        self.simple = not(c == '.' or c == '*')
       if c == '*' :
         self.nodes[i-n-1].star = True
         n += 1
       else :
         self.nodes.append(Node(c))
     self.nodes.append(Node(None))
-    #self.l = len(self.nodes)
     if debug :
       for n in self.nodes : n.print_info()
 
   def match(self,s) :
-    if self.nodes[0].c is None : return not s
+    if self.simple :
+      return s == self.pattern
+    if self.nodes[0].c is None :
+      return not s
     return self._match(s,self.nodes)
 
   def _match(self,s,nodes) :
