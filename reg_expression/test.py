@@ -55,6 +55,10 @@ def test_star() :
   assert nfa.match('')    == True
   assert nfa.match('a')   == True
   assert nfa.match('aaa') == True
+  nfa = NonFiniteAutomata('c*c*')
+  assert nfa.match('')      == True
+  assert nfa.match('c')     == True
+  assert nfa.match('c'*100) == True
   print 'pass star'
 
 def test_dot_star() :

@@ -33,8 +33,8 @@ class NonFiniteAutomata(object) :
       return not s
 
     if len(s) == 0 :
-      if node.star and nodes[1].c is None :
-        return True
+      if node.star :
+        return self._match('',nodes[1:])
       else:
         return False
 
@@ -61,4 +61,3 @@ class Node(object) :
     print 'wild?: ', str(self.wild)
     print 'star?: ', str(self.star)
     print '-'*15
-
