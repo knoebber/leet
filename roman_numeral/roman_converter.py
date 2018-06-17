@@ -1,5 +1,4 @@
-symbols =
-{
+symbols = {
   0:['I','V'],
   1:['X','L'],
   2:['C','D'],
@@ -35,33 +34,19 @@ def _to_roman(tens,i,debug=False) :
     if debug:
       print 'd == 0' 
     return f()
-  if tens == 0 :
-    if d == 4 :
-      return f()+'IV'
-    elif d == 9 :
-      return f()+'IX'
-    elif d < 5 :
-      return f()+'I'*d
-    elif d == 5 :
-      return f()+'V'
-    else :
-      return f()+'V'+('I'*(d-5))
-  elif tens == 1 :
-    if d == 4 :
-      return f()+'XL'
-    elif d == 9 :
-      return f()+'XC'
-    elif d < 5 :
-      return f()+'X'*d
-    elif d == 5 :
-      return f()+'L'
-    else :
-      return f()+'L'+('X'*(d-5))
-  if debug: print 'after elif'
+  if d == 4 :
+    return f() + symbols[tens][0] + symbols[tens][1]
+  elif d == 9 :
+    return f() + symbols[tens][0] + symbols[tens+1][0]
+  elif d < 5 :
+    return f() + symbols[tens][0]*d
+  elif d == 5 :
+    return f() + symbols[tens][1]
+  else :
+    return f() + symbols[tens][1] + (symbols[tens][0]*(d-5))
 
 """
 converts a roman numeral string s to an integer
 """
 def to_int(s) :
   return 0
-
