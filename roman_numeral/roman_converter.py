@@ -22,10 +22,10 @@ def _to_roman(tens,i,) :
   f = lambda: _to_roman(tens+1,i/10)
   d = i%10
 
-  if d == 0   : return f()
-  if d == 4   : return f() + symbols[tens][0] + symbols[tens][1]
+  if   d == 0 : return f()
+  if   d == 4 : return f() + symbols[tens][0] + symbols[tens][1]
   elif d == 9 : return f() + symbols[tens][0] + symbols[tens+1][0]
-  elif d < 5  : return f() + symbols[tens][0] * d
+  elif d <  5 : return f() + symbols[tens][0] * d
   elif d == 5 : return f() + symbols[tens][1]
   else        : return f() + symbols[tens][1] + (symbols[tens][0]*(d-5))
 
