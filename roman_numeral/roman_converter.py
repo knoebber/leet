@@ -8,10 +8,6 @@ symbols = {
 """
 converts an integer i into a roman numeral
 precondition: i < 4000
-
-114 => CXIV
-119 => CIX
-149 => CXLIX
 """
 def to_roman(i) :
   return _to_roman(0,i)
