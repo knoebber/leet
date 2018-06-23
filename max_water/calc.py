@@ -18,13 +18,16 @@ that have taller points surrounding them
 """
 def f_calc(heights) :
   m = 0
-  t = 0
+  t = 0 #tallest
+  t_r_i = 0  #tallest to the right index
   for i in xrange(0,len(heights)) :
     if heights[i] > t :
       t = heights[i]
     else:
       continue
-    for j in xrange(0,len(heights)) :
+    for j in xrange(t_r_i,len(heights)) :
+      if heights[j] > heights[t_r_i] :
+        t_r_i = j
       area = min(heights[i],heights[j]) * (abs((i+1) - (j+1)))
       if area > m :
         m = area
