@@ -27,4 +27,21 @@ def test_versions() :
       raise Exception ('Failed test versions')
   print 'passes!'
 
+def test_large() :
+  large = [x for x in range(0,15001)]
+  start = time()
+  slow = calculate(large)
+  end = time()
+  elapsed = end - start
+  print 'slow took: ',elapsed
+  start = time()
+  fast = f_calc(large)
+  end = time()
+  elapsed = end - start
+  print 'fast took: ',elapsed
+  assert slow == fast
+
+
+
 test_versions()
+test_large()
