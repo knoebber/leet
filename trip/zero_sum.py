@@ -9,11 +9,11 @@ def tripplet(lst) :
     xs = tripplet(lst)
     new = []
     for t in xs :
-      new += [(n,t[1],t[2])
-             ,(t[0],n,t[2])
-             ,(t[0],t[1],n)]
+      new += [[n,t[1],t[2]]
+             ,[t[0],n,t[2]]
+             ,[t[0],t[1],n]]
     return xs + new
 
 def naive_zero_sum(lst) :
-  return filter(lambda t : t[0] + t[1] + t[2] == 0,tripplet(lst))
+  return map(list,set(map(lambda z: tuple(sorted(z)),filter(lambda t : t[0] + t[1] + t[2] == 0,tripplet(lst)))))
 
