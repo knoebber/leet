@@ -3,7 +3,7 @@ def tripplet(lst) :
   if l < 3 :
     return []
   if l == 3 :
-    return [(lst[0],lst[1],lst[2])]
+    return [lst]
   else :
     n = lst.pop()
     xs = tripplet(lst)
@@ -15,5 +15,9 @@ def tripplet(lst) :
     return xs + new
 
 def naive_zero_sum(lst) :
-  return map(list,set(map(lambda z: tuple(sorted(z)),filter(lambda t : t[0] + t[1] + t[2] == 0,tripplet(lst)))))
+  return map(list,set(
+         map(lambda z: tuple(sorted(z)),
+         filter(lambda t : t[0] + t[1] + t[2] == 0,tripplet(lst)))))
+
+
 
