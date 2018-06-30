@@ -11,6 +11,7 @@ def basic_test(f) :
 
 def suite() :
   basic_test(lambda lst : naive_zero_sum(lst))
+  basic_test(lambda lst : fast_tz(lst))
 
 
 suite()
